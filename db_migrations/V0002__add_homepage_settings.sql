@@ -1,0 +1,25 @@
+-- Добавляем настройки для главной страницы
+INSERT INTO site_settings (setting_key, setting_value) VALUES
+('hero_title', 'ХК ТОРОС'),
+('hero_subtitle', 'Нефтекамск • ВХЛ • Сезон 2025/2026'),
+('hero_image', 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg'),
+('news_title', 'Новости'),
+('news_subtitle', 'Последние события и анонсы'),
+('calendar_title', 'Календарь матчей'),
+('calendar_subtitle', 'Расписание игр и результаты'),
+('team_title', 'Состав команды'),
+('team_subtitle', 'Наши игроки'),
+('history_title', 'История клуба'),
+('history_subtitle', 'Путь к успеху'),
+('history_block1_title', 'Основание клуба'),
+('history_block1_text', 'Хоккейный клуб "Торос" основан в Нефтекамске и носит имя легендарного первобытного быка, символизирующего силу и мощь команды.'),
+('history_block2_title', 'Достижения'),
+('history_block2_text', 'Команда успешно выступает в ВХЛ, демонстрируя яркий и результативный хоккей. Воспитанники клуба регулярно получают вызовы в молодежную сборную России.'),
+('history_block3_title', 'Наши болельщики'),
+('history_block3_text', 'Преданные фанаты "Тороса" создают неповторимую атмосферу на домашней арене, поддерживая команду на каждом матче.'),
+('gallery_title', 'Галерея'),
+('gallery_subtitle', 'Лучшие моменты'),
+('contacts_title', 'Контакты'),
+('contacts_subtitle', 'Свяжитесь с нами'),
+('logo_url', 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/7932246c-7bb3-4c22-8c49-3f970ee4c11d.jpg')
+ON CONFLICT (setting_key) DO NOTHING;

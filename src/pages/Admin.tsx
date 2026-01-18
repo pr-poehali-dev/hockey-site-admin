@@ -213,14 +213,188 @@ const Admin = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="news" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+        <Tabs defaultValue="homepage" className="w-full">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="homepage">Главная</TabsTrigger>
             <TabsTrigger value="news">Новости</TabsTrigger>
             <TabsTrigger value="matches">Матчи</TabsTrigger>
             <TabsTrigger value="players">Игроки</TabsTrigger>
             <TabsTrigger value="gallery">Галерея</TabsTrigger>
             <TabsTrigger value="settings">Настройки</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="homepage" className="space-y-4">
+            <h2 className="text-2xl font-bold mb-4">Редактирование главной страницы</h2>
+            <Card className="p-6">
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target as HTMLFormElement);
+                const data = Object.fromEntries(formData.entries());
+                try {
+                  await fetch(`${API_URL}?type=settings`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                  });
+                  toast({ title: 'Успешно', description: 'Главная страница обновлена' });
+                  loadAllData();
+                } catch (error) {
+                  toast({ title: 'Ошибка', description: 'Не удалось сохранить', variant: 'destructive' });
+                }
+              }} className="space-y-6">
+                <div className="border-b pb-4">
+                  <h3 className="text-lg font-bold mb-4">Шапка сайта</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="logo_url">Логотип (URL)</Label>
+                      <Input id="logo_url" name="logo_url" defaultValue={settings.logo_url} placeholder="https://..." />
+                    </div>
+                    <div>
+                      <Label htmlFor="site_title">Название команды</Label>
+                      <Input id="site_title" name="site_title" defaultValue={settings.site_title} placeholder="ХК ТОРОС" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-b pb-4">
+                  <h3 className="text-lg font-bold mb-4">Главный блок (Hero)</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="hero_title">Заголовок</Label>
+                      <Input id="hero_title" name="hero_title" defaultValue={settings.hero_title} placeholder="ХК ТОРОС" />
+                    </div>
+                    <div>
+                      <Label htmlFor="hero_subtitle">Подзаголовок</Label>
+                      <Input id="hero_subtitle" name="hero_subtitle" defaultValue={settings.hero_subtitle} placeholder="Нефтекамск • ВХЛ • Сезон 2025/2026" />
+                    </div>
+                    <div>
+                      <Label htmlFor="hero_image">Изображение (URL)</Label>
+                      <Input id="hero_image" name="hero_image" defaultValue={settings.hero_image} placeholder="https://..." />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-b pb-4">
+                  <h3 className="text-lg font-bold mb-4">Раздел "Новости"</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="news_title">Заголовок</Label>
+                      <Input id="news_title" name="news_title" defaultValue={settings.news_title} placeholder="Новости" />
+                    </div>
+                    <div>
+                      <Label htmlFor="news_subtitle">Подзаголовок</Label>
+                      <Input id="news_subtitle" name="news_subtitle" defaultValue={settings.news_subtitle} placeholder="Последние события и анонсы" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-b pb-4">
+                  <h3 className="text-lg font-bold mb-4">Раздел "Календарь матчей"</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="calendar_title">Заголовок</Label>
+                      <Input id="calendar_title" name="calendar_title" defaultValue={settings.calendar_title} placeholder="Календарь матчей" />
+                    </div>
+                    <div>
+                      <Label htmlFor="calendar_subtitle">Подзаголовок</Label>
+                      <Input id="calendar_subtitle" name="calendar_subtitle" defaultValue={settings.calendar_subtitle} placeholder="Расписание игр и результаты" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-b pb-4">
+                  <h3 className="text-lg font-bold mb-4">Раздел "Состав команды"</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="team_title">Заголовок</Label>
+                      <Input id="team_title" name="team_title" defaultValue={settings.team_title} placeholder="Состав команды" />
+                    </div>
+                    <div>
+                      <Label htmlFor="team_subtitle">Подзаголовок</Label>
+                      <Input id="team_subtitle" name="team_subtitle" defaultValue={settings.team_subtitle} placeholder="Наши игроки" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-b pb-4">
+                  <h3 className="text-lg font-bold mb-4">Раздел "История клуба"</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="history_title">Заголовок</Label>
+                      <Input id="history_title" name="history_title" defaultValue={settings.history_title} placeholder="История клуба" />
+                    </div>
+                    <div>
+                      <Label htmlFor="history_subtitle">Подзаголовок</Label>
+                      <Input id="history_subtitle" name="history_subtitle" defaultValue={settings.history_subtitle} placeholder="Путь к успеху" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="history_block1_title">Блок 1 - Заголовок</Label>
+                        <Input id="history_block1_title" name="history_block1_title" defaultValue={settings.history_block1_title} />
+                      </div>
+                      <div>
+                        <Label htmlFor="history_block1_text">Блок 1 - Текст</Label>
+                        <Textarea id="history_block1_text" name="history_block1_text" defaultValue={settings.history_block1_text} rows={2} />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="history_block2_title">Блок 2 - Заголовок</Label>
+                        <Input id="history_block2_title" name="history_block2_title" defaultValue={settings.history_block2_title} />
+                      </div>
+                      <div>
+                        <Label htmlFor="history_block2_text">Блок 2 - Текст</Label>
+                        <Textarea id="history_block2_text" name="history_block2_text" defaultValue={settings.history_block2_text} rows={2} />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="history_block3_title">Блок 3 - Заголовок</Label>
+                        <Input id="history_block3_title" name="history_block3_title" defaultValue={settings.history_block3_title} />
+                      </div>
+                      <div>
+                        <Label htmlFor="history_block3_text">Блок 3 - Текст</Label>
+                        <Textarea id="history_block3_text" name="history_block3_text" defaultValue={settings.history_block3_text} rows={2} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-b pb-4">
+                  <h3 className="text-lg font-bold mb-4">Раздел "Галерея"</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="gallery_title">Заголовок</Label>
+                      <Input id="gallery_title" name="gallery_title" defaultValue={settings.gallery_title} placeholder="Галерея" />
+                    </div>
+                    <div>
+                      <Label htmlFor="gallery_subtitle">Подзаголовок</Label>
+                      <Input id="gallery_subtitle" name="gallery_subtitle" defaultValue={settings.gallery_subtitle} placeholder="Лучшие моменты" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-b pb-4">
+                  <h3 className="text-lg font-bold mb-4">Раздел "Контакты"</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="contacts_title">Заголовок</Label>
+                      <Input id="contacts_title" name="contacts_title" defaultValue={settings.contacts_title} placeholder="Контакты" />
+                    </div>
+                    <div>
+                      <Label htmlFor="contacts_subtitle">Подзаголовок</Label>
+                      <Input id="contacts_subtitle" name="contacts_subtitle" defaultValue={settings.contacts_subtitle} placeholder="Свяжитесь с нами" />
+                    </div>
+                  </div>
+                </div>
+
+                <Button type="submit" size="lg" className="w-full">
+                  <Icon name="Save" size={20} className="mr-2" />
+                  Сохранить изменения
+                </Button>
+              </form>
+            </Card>
+          </TabsContent>
 
           <TabsContent value="news" className="space-y-4">
             <div className="flex justify-between items-center">

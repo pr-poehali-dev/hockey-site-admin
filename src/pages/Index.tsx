@@ -4,9 +4,17 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 
+const API_URL = 'https://functions.poehali.dev/f6160b71-ab85-440c-8039-c830d68ae9bb';
+
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [settings, setSettings] = useState<any>({});
+  const [news, setNews] = useState<any[]>([]);
+  const [matches, setMatches] = useState<any[]>([]);
+  const [players, setPlayers] = useState<any[]>([]);
+  const [gallery, setGallery] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +23,32 @@ const Index = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [settingsRes, newsRes, matchesRes, playersRes, galleryRes] = await Promise.all([
+        fetch(`${API_URL}?type=settings`),
+        fetch(`${API_URL}?type=news`),
+        fetch(`${API_URL}?type=matches`),
+        fetch(`${API_URL}?type=players`),
+        fetch(`${API_URL}?type=gallery`)
+      ]);
+      
+      setSettings(await settingsRes.json());
+      setNews(await newsRes.json());
+      setMatches(await matchesRes.json());
+      setPlayers(await playersRes.json());
+      setGallery(await galleryRes.json());
+      setLoading(false);
+    } catch (error) {
+      console.error('Failed to load data:', error);
+      setLoading(false);
+    }
+  };
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -34,67 +68,16 @@ const Index = () => {
     { id: 'contacts', label: 'Контакты', icon: 'Phone' },
   ];
 
-  const newsData = [
-    {
-      id: 1,
-      title: '17 ЯНВАРЯ 2026 ГОДА. ТОРОС - ДИНАМО-АЛТАЙ',
-      date: '17 Янв 2026 12:30',
-      image: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg',
-      category: 'Матч'
-    },
-    {
-      id: 2,
-      title: 'Новый сезон 2025/2026',
-      date: '10 Янв 2026 10:00',
-      image: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/ad4f37d5-567f-47c5-8081-7ee8c3633541.jpg',
-      category: 'Новость'
-    },
-    {
-      id: 3,
-      title: 'Партнеры ХК "Торос"',
-      date: '5 Янв 2026 14:00',
-      image: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/7932246c-7bb3-4c22-8c49-3f970ee4c11d.jpg',
-      category: 'Партнеры'
-    }
-  ];
-
-  const matches = [
-    {
-      date: '21 ЯНВАРЯ',
-      time: '19:00',
-      homeTeam: 'ТОРОС',
-      awayTeam: 'СОКОЛ',
-      homeLogo: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/7932246c-7bb3-4c22-8c49-3f970ee4c11d.jpg',
-      location: 'Нефтекамск'
-    },
-    {
-      date: '19 ЯНВАРЯ',
-      time: '17:00',
-      homeTeam: 'ТОРОС',
-      awayTeam: 'МЕТАЛЛУРГ НК',
-      score: '0:0',
-      homeLogo: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/7932246c-7bb3-4c22-8c49-3f970ee4c11d.jpg',
-      location: 'Нефтекамск'
-    }
-  ];
-
-  const players = [
-    { number: 17, name: 'Александр Иванов', position: 'Нападающий', image: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg' },
-    { number: 23, name: 'Дмитрий Петров', position: 'Защитник', image: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg' },
-    { number: 91, name: 'Сергей Смирнов', position: 'Вратарь', image: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg' },
-    { number: 7, name: 'Максим Козлов', position: 'Нападающий', image: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg' },
-    { number: 44, name: 'Андрей Новиков', position: 'Защитник', image: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg' },
-    { number: 10, name: 'Игорь Федоров', position: 'Нападающий', image: 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg' }
-  ];
-
-  const galleryImages = [
-    'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg',
-    'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/ad4f37d5-567f-47c5-8081-7ee8c3633541.jpg',
-    'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/7932246c-7bb3-4c22-8c49-3f970ee4c11d.jpg',
-    'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg',
-    'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/ad4f37d5-567f-47c5-8081-7ee8c3633541.jpg',
-    'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/7932246c-7bb3-4c22-8c49-3f970ee4c11d.jpg'
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Загрузка...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,8 +85,8 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-3">
-              <img src="https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/7932246c-7bb3-4c22-8c49-3f970ee4c11d.jpg" alt="Торос" className="h-14 w-14 rounded-full object-cover" />
-              <span className="text-2xl font-bold text-white">ТОРОС</span>
+              <img src={settings.logo_url || 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/7932246c-7bb3-4c22-8c49-3f970ee4c11d.jpg'} alt="Торос" className="h-14 w-14 rounded-full object-cover" />
+              <span className="text-2xl font-bold text-white">{settings.site_title || 'ТОРОС'}</span>
             </div>
             <div className="hidden md:flex space-x-1">
               {menuItems.map((item) => (
@@ -135,10 +118,10 @@ const Index = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="animate-fade-in">
               <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
-                ХК ТОРОС
+                {settings.hero_title || 'ХК ТОРОС'}
               </h1>
               <p className="text-xl md:text-2xl text-white/90 mb-8">
-                Нефтекамск • ВХЛ • Сезон 2025/2026
+                {settings.hero_subtitle || 'Нефтекамск • ВХЛ • Сезон 2025/2026'}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" variant="secondary" onClick={() => scrollToSection('calendar')}>
@@ -152,7 +135,7 @@ const Index = () => {
               </div>
             </div>
             <div className="relative animate-scale-in">
-              <img src="https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg" alt="Хоккей" className="rounded-2xl shadow-2xl" />
+              <img src={settings.hero_image || 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/0456d001-cb09-4443-8d8a-51dbbcc475ce.jpg'} alt="Хоккей" className="rounded-2xl shadow-2xl" />
             </div>
           </div>
         </div>
@@ -161,17 +144,17 @@ const Index = () => {
       <section id="news" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-4xl font-bold mb-4">Новости</h2>
-            <p className="text-muted-foreground text-lg">Последние события и анонсы</p>
+            <h2 className="text-4xl font-bold mb-4">{settings.news_title || 'Новости'}</h2>
+            <p className="text-muted-foreground text-lg">{settings.news_subtitle || 'Последние события и анонсы'}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {newsData.map((news, index) => (
-              <Card key={news.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
-                <img src={news.image} alt={news.title} className="w-full h-48 object-cover" />
+            {news.slice(0, 3).map((item, index) => (
+              <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
+                <img src={item.image_url} alt={item.title} className="w-full h-48 object-cover" />
                 <div className="p-6">
-                  <Badge className="mb-3">{news.category}</Badge>
-                  <h3 className="text-xl font-bold mb-2">{news.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">{news.date}</p>
+                  <Badge className="mb-3">{item.category}</Badge>
+                  <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground mb-4">{new Date(item.published_date).toLocaleDateString('ru-RU')}</p>
                   <Button variant="link" className="px-0">
                     Читать далее <Icon name="ArrowRight" size={16} className="ml-2" />
                   </Button>
@@ -190,30 +173,28 @@ const Index = () => {
       <section id="calendar" className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-4xl font-bold mb-4">Календарь матчей</h2>
-            <p className="text-muted-foreground text-lg">Расписание игр и результаты</p>
+            <h2 className="text-4xl font-bold mb-4">{settings.calendar_title || 'Календарь матчей'}</h2>
+            <p className="text-muted-foreground text-lg">{settings.calendar_subtitle || 'Расписание игр и результаты'}</p>
           </div>
           <div className="max-w-4xl mx-auto space-y-6">
-            {matches.map((match, index) => (
-              <Card key={index} className="p-6 hover:shadow-lg transition-all duration-300 animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+            {matches.slice(0, 5).map((match, index) => (
+              <Card key={match.id} className="p-6 hover:shadow-lg transition-all duration-300 animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                   <div className="text-center">
-                    <p className="text-lg font-bold text-primary">{match.date}</p>
-                    <p className="text-sm text-muted-foreground">{match.time}</p>
+                    <p className="text-lg font-bold text-primary">{match.match_date}</p>
+                    <p className="text-sm text-muted-foreground">{match.match_time}</p>
                   </div>
                   <div className="flex items-center gap-8 flex-1">
                     <div className="flex items-center gap-3 flex-1 justify-end">
-                      <span className="text-xl font-bold">{match.homeTeam}</span>
-                      <img src={match.homeLogo} alt={match.homeTeam} className="w-12 h-12 rounded-full object-cover" />
+                      <span className="text-xl font-bold">{match.home_team}</span>
+                      {match.home_logo && <img src={match.home_logo} alt={match.home_team} className="w-12 h-12 rounded-full object-cover" />}
                     </div>
                     <div className="text-3xl font-bold text-primary">
                       {match.score || 'VS'}
                     </div>
                     <div className="flex items-center gap-3 flex-1">
-                      <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                        <Icon name="Shield" size={24} />
-                      </div>
-                      <span className="text-xl font-bold">{match.awayTeam}</span>
+                      {match.away_logo ? <img src={match.away_logo} alt={match.away_team} className="w-12 h-12 rounded-full object-cover" /> : <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center"><Icon name="Shield" size={24} /></div>}
+                      <span className="text-xl font-bold">{match.away_team}</span>
                     </div>
                   </div>
                   <div className="text-center">
@@ -236,14 +217,14 @@ const Index = () => {
       <section id="team" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-4xl font-bold mb-4">Состав команды</h2>
-            <p className="text-muted-foreground text-lg">Наши игроки</p>
+            <h2 className="text-4xl font-bold mb-4">{settings.team_title || 'Состав команды'}</h2>
+            <p className="text-muted-foreground text-lg">{settings.team_subtitle || 'Наши игроки'}</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {players.map((player, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
+            {players.slice(0, 6).map((player, index) => (
+              <Card key={player.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
                 <div className="relative">
-                  <img src={player.image} alt={player.name} className="w-full h-64 object-cover" />
+                  {player.image_url && <img src={player.image_url} alt={player.name} className="w-full h-64 object-cover" />}
                   <div className="absolute top-4 left-4 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold">
                     {player.number}
                   </div>
@@ -267,8 +248,8 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12 animate-fade-in">
-              <h2 className="text-4xl font-bold mb-4">История клуба</h2>
-              <p className="text-white/80 text-lg">Путь к успеху</p>
+              <h2 className="text-4xl font-bold mb-4">{settings.history_title || 'История клуба'}</h2>
+              <p className="text-white/80 text-lg">{settings.history_subtitle || 'Путь к успеху'}</p>
             </div>
             <div className="space-y-8">
               <Card className="p-8 bg-white/10 border-white/20 text-white animate-fade-in">
@@ -277,8 +258,8 @@ const Index = () => {
                     <Icon name="Trophy" size={24} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2">Основание клуба</h3>
-                    <p className="text-white/80">Хоккейный клуб "Торос" основан в Нефтекамске и носит имя легендарного первобытного быка, символизирующего силу и мощь команды.</p>
+                    <h3 className="text-2xl font-bold mb-2">{settings.history_block1_title || 'Основание клуба'}</h3>
+                    <p className="text-white/80">{settings.history_block1_text || 'Хоккейный клуб "Торос" основан в Нефтекамске'}</p>
                   </div>
                 </div>
               </Card>
@@ -288,8 +269,8 @@ const Index = () => {
                     <Icon name="Star" size={24} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2">Достижения</h3>
-                    <p className="text-white/80">Команда успешно выступает в ВХЛ, демонстрируя яркий и результативный хоккей. Воспитанники клуба регулярно получают вызовы в молодежную сборную России.</p>
+                    <h3 className="text-2xl font-bold mb-2">{settings.history_block2_title || 'Достижения'}</h3>
+                    <p className="text-white/80">{settings.history_block2_text || 'Команда успешно выступает в ВХЛ'}</p>
                   </div>
                 </div>
               </Card>
@@ -299,8 +280,8 @@ const Index = () => {
                     <Icon name="Heart" size={24} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2">Наши болельщики</h3>
-                    <p className="text-white/80">Преданные фанаты "Тороса" создают неповторимую атмосферу на домашней арене, поддерживая команду на каждом матче.</p>
+                    <h3 className="text-2xl font-bold mb-2">{settings.history_block3_title || 'Наши болельщики'}</h3>
+                    <p className="text-white/80">{settings.history_block3_text || 'Преданные фанаты "Тороса"'}</p>
                   </div>
                 </div>
               </Card>
@@ -312,13 +293,13 @@ const Index = () => {
       <section id="gallery" className="py-20 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-4xl font-bold mb-4">Галерея</h2>
-            <p className="text-muted-foreground text-lg">Лучшие моменты</p>
+            <h2 className="text-4xl font-bold mb-4">{settings.gallery_title || 'Галерея'}</h2>
+            <p className="text-muted-foreground text-lg">{settings.gallery_subtitle || 'Лучшие моменты'}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {galleryImages.map((image, index) => (
-              <div key={index} className="relative overflow-hidden rounded-lg group cursor-pointer animate-scale-in" style={{ animationDelay: `${index * 50}ms` }}>
-                <img src={image} alt={`Галерея ${index + 1}`} className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110" />
+            {gallery.slice(0, 6).map((item, index) => (
+              <div key={item.id} className="relative overflow-hidden rounded-lg group cursor-pointer animate-scale-in" style={{ animationDelay: `${index * 50}ms` }}>
+                <img src={item.image_url} alt={item.title || `Галерея ${index + 1}`} className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <Icon name="ZoomIn" size={40} className="text-white" />
                 </div>
@@ -331,8 +312,8 @@ const Index = () => {
       <section id="contacts" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-4xl font-bold mb-4">Контакты</h2>
-            <p className="text-muted-foreground text-lg">Свяжитесь с нами</p>
+            <h2 className="text-4xl font-bold mb-4">{settings.contacts_title || 'Контакты'}</h2>
+            <p className="text-muted-foreground text-lg">{settings.contacts_subtitle || 'Свяжитесь с нами'}</p>
           </div>
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -343,7 +324,7 @@ const Index = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold mb-2">Приемная клуба</h3>
-                    <p className="text-muted-foreground">+7 (34783) 5 54 23</p>
+                    <p className="text-muted-foreground">{settings.contact_phone || '+7 (34783) 5 54 23'}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4 mb-6">
@@ -352,7 +333,7 @@ const Index = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold mb-2">Email</h3>
-                    <p className="text-muted-foreground">reklama@hctoros.ru</p>
+                    <p className="text-muted-foreground">{settings.contact_email || 'reklama@hctoros.ru'}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -361,7 +342,7 @@ const Index = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold mb-2">Адрес</h3>
-                    <p className="text-muted-foreground">Нефтекамск, Республика Башкортостан</p>
+                    <p className="text-muted-foreground">{settings.contact_address || 'Нефтекамск, Республика Башкортостан'}</p>
                   </div>
                 </div>
               </Card>
@@ -395,10 +376,10 @@ const Index = () => {
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
               <div className="flex items-center space-x-3 mb-4">
-                <img src="https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/7932246c-7bb3-4c22-8c49-3f970ee4c11d.jpg" alt="Торос" className="h-12 w-12 rounded-full object-cover" />
-                <span className="text-2xl font-bold">ТОРОС</span>
+                <img src={settings.logo_url || 'https://cdn.poehali.dev/projects/a215b691-5cfb-4f4c-b25f-1a6a469468dc/files/7932246c-7bb3-4c22-8c49-3f970ee4c11d.jpg'} alt="Торос" className="h-12 w-12 rounded-full object-cover" />
+                <span className="text-2xl font-bold">{settings.site_title || 'ТОРОС'}</span>
               </div>
-              <p className="text-white/80">Хоккейный клуб города Нефтекамск</p>
+              <p className="text-white/80">{settings.hero_subtitle || 'Хоккейный клуб города Нефтекамск'}</p>
             </div>
             <div>
               <h4 className="text-lg font-bold mb-4">Быстрые ссылки</h4>
