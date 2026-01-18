@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "name": "Test login with correct credentials",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "login",
+        "username": "admin",
+        "password": "dmitri1987"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "token": "string",
+        "username": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get all news",
+      "method": "GET",
+      "path": "/?type=news",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get all players",
+      "method": "GET",
+      "path": "/?type=players",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    }
+  ]
+}

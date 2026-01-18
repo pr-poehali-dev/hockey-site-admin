@@ -118,7 +118,7 @@ const Index = () => {
                 </Button>
               ))}
             </div>
-            <Button variant="secondary" size="sm" className="hidden md:block">
+            <Button variant="secondary" size="sm" className="hidden md:block" onClick={() => window.location.href = '/admin'}>
               <Icon name="User" size={18} className="mr-2" />
               Админ-панель
             </Button>
